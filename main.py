@@ -1,8 +1,10 @@
 from fastapi import FastAPI, Depends, HTTPException
 from sqlalchemy.orm import Session
-from . import models, schemas, crud, database
+import models, schemas, database, crud
 
 app = FastAPI()
+
+models.Base.metadata.create_all(bind=database.engine)
 
 #path parameters and query parameters
 # @app.get("/users/{user_id}/items/{item_id}")
@@ -22,6 +24,7 @@ def get_db():
         
 @app.post("/items/", response_model=schemas.Item)
 def create_item(item: schemas.ItemCreate, db: Session = Depends(get_db)):
+    print(item)
     return crud.create_item(db=db, item=item)
 
 @app.get("/items/{item_id}", response_model=schemas.Item)
