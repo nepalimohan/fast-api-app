@@ -15,6 +15,23 @@ models.Base.metadata.create_all(bind=database.engine)
 #             "detail": detail, 
 #             }
 
+from contextlib import contextmanager
+
+class Database():
+    def __init__(self):
+        self.connection = "Database connection established"
+        
+    def close(self):
+        self.connection = "Database connection closed"
+        
+@contextmanager  
+def get_db():
+    db = Database()
+    try:
+        yield db
+    finally:
+        db.close()
+
 def get_db():
     db = database.SessionLocal()
     try:
